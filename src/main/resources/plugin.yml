@@ -1,0 +1,17 @@
+name: CH-ArmorHide
+version: '1.0.0'
+main: com.ch.armorhide.CHArmorHide
+api-version: '1.21'
+description: 방어구(투구/갑옷/바지/신발)가 어떤 이유로든 사라지지 않도록 보호 (사망 시 항상 유지 + 원인 불명 소실 자동 복구)
+
+commands:
+  armorhide:
+    description: CH-ArmorHide 관리 명령어
+    aliases: [방어구보호]
+    usage: /armorhide <reload|allow <닉네임> [초]>
+    permission: charmorhide.admin
+
+permissions:
+  charmorhide.admin:
+    description: CH-ArmorHide 관리자 권한
+    default: op

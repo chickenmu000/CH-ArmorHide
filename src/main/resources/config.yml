@@ -1,0 +1,31 @@
+# CH-ArmorHide 설정
+
+# 사망 시 방어구(투구/갑옷/바지/신발)를 항상 유지합니다. (인벤세이브권 유무와 상관없음)
+# 이미 인벤토리가 유지되는 사망(CH-TradeLock 의 보호 월드 / 초심자의 행운 / 인벤세이브권)에서는 아무것도 하지 않습니다.
+keep-on-death: true
+
+# 소멸 저주(Curse of Vanishing)가 붙은 방어구는 사망 시 그대로 사라지게 둡니다. (false 면 그것도 지킴)
+respect-vanishing-curse: true
+
+# 원인 불명으로 입고 있던 방어구가 사라지면 자동으로 되돌립니다.
+guard-enabled: true
+
+# 직접 벗는 동작 등을 "정상"으로 인정해 주는 시간(틱). 20틱 = 1초
+legit-window-ticks: 5
+
+# 아래 명령어가 실행되면(모든 접속자) 5틱 동안 방어구가 없어져도 복구하지 않습니다. (관리자의 /clear 등)
+legit-commands:
+  - clear
+  - ci
+  - clearinventory
+  - eclear
+  - eci
+  - item
+  - replaceitem
+  - execute
+
+# 복구가 일어나면 접속 중인 OP 에게 알림
+notify-ops: true
+
+# plugins/CH-ArmorHide/restore.log 에 복구 기록 (원인 추적용)
+log-restores: true
