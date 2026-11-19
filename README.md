@@ -45,6 +45,7 @@
 | `legit-commands` | clear 등 | 이 명령어 직후 5틱은 정상으로 인정 |
 | `notify-ops` | `true` | 복구 시 접속 중인 OP 에게 알림 |
 | `log-restores` | `true` | `restore.log` 기록 |
+| `debug-trace` | `false` | 방어구 칸이 비워질 때 호출 경로(스택)를 `[TRACE]` 로 기록 (원인 플러그인 추적용) |
 
 ## 빌드
 

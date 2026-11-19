@@ -2,6 +2,7 @@ package com.ch.armorhide;
 
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import io.papermc.paper.event.player.PlayerInventorySlotChangeEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -364,6 +365,52 @@ public class ArmorGuard implements Listener {
         String line = p.getName() + " " + slotName(slot) + " 복구 " + old.getType().name() + " / " + ctx;
         record(line);
         notifyOps(line);
+    }
+
+    // ------------------------------------------------------------------
+    // 원인 추적용: 누가 방어구 칸을 비우는지 호출 경로(스택)를 기록 (config debug-trace)
+    // ------------------------------------------------------------------
+    private final Map<UUID, Long> lastTrace = new HashMap<>();
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onSlotChange(PlayerInventorySlotChangeEvent e) {
+        if (!plugin.getConfig().getBoolean("debug-trace", false)) {
+            return;
+        }
+        int slot = e.getSlot();
+        if (slot < 36 || slot > 39) {
+            return; // 36 신발, 37 바지, 38 갑옷, 39 투구
+        }
+        if (isEmpty(e.getOldItemStack()) || !isEmpty(e.getNewItemStack())) {
+            return;
+        }
+        Player p = e.getPlayer();
+        if (p.isDead() || isLegit(p)) {
+            return;
+        }
+        long tick = Bukkit.getCurrentTick();
+        Long prev = lastTrace.get(p.getUniqueId());
+        if (prev != null && tick - prev < 20) {
+            return;
+        }
+        lastTrace.put(p.getUniqueId(), tick);
+
+        StringBuilder sb = new StringBuilder();
+        int n = 0;
+        for (StackTraceElement el : new Throwable().getStackTrace()) {
+            String c = el.getClassName();
+            if (c.startsWith("java.") || c.startsWith("jdk.") || c.startsWith("com.ch.armorhide")
+                    || c.startsWith("org.bukkit.plugin.") || c.startsWith("io.papermc.paper.event")
+                    || c.startsWith("com.destroystokyo.paper.event")) {
+                continue;
+            }
+            sb.append(c).append('.').append(el.getMethodName()).append(':').append(el.getLineNumber()).append(" <- ");
+            if (++n >= 14) {
+                break;
+            }
+        }
+        record("[TRACE] " + p.getName() + " 슬롯=" + slot + " " + e.getOldItemStack().getType().name()
+                + " 사라짐 / " + context(p) + " / 호출경로: " + sb);
     }
 
     // ------------------------------------------------------------------

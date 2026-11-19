@@ -29,3 +29,7 @@ notify-ops: true
 
 # plugins/CH-ArmorHide/restore.log 에 복구 기록 (원인 추적용)
 log-restores: true
+
+# 원인 추적: 방어구 칸이 비워질 때 "누가 호출했는지(스택)" 를 restore.log 에 [TRACE] 로 기록
+# 원인을 찾을 때만 true 로 켜고, 찾으면 끄세요.
+debug-trace: false
